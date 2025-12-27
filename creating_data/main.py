@@ -26,4 +26,4 @@ new_data = new_data.drop(columns=['id_played_at'], errors='ignore')
 
 if len(new_data) > 0:
     # Adding the new tracks to the csv file
-    new_data.to_csv('spotify_tracking.csv', mode='a', index=False, header=not os.path.exists('spotify_tracking.csv'))
+    new_data.to_csv('data/spotify_tracking.csv', mode='a', index=False, header=not os.path.exists('data/spotify_tracking.csv'))
