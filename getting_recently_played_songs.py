@@ -2,7 +2,7 @@ from spotify_credentials import get_sp_credentials
 
 def getting_recently_played_tracks():
     sp = get_sp_credentials()
-
+    
     # Getting the recently played songs
     recent_tracks = sp.current_user_recently_played() # 50 is the max limit
 
@@ -30,3 +30,17 @@ def getting_recently_played_tracks():
     return recently_played_list
 
 # getting_recently_played_tracks()
+
+def getting_recently_played_epsodes():
+    sp = get_sp_credentials()
+
+    results = sp.current_user_recently_played(limit=10)
+
+    # Filtrar apenas episódios de podcast
+    for item in results['items']:
+        print(item)
+        track = item['track']
+        if track['type'] == 'episode':
+            print(track)
+
+# getting_recently_played_epsodes()
