@@ -19,10 +19,11 @@ track_list['id_played_at'] = track_list['id'] + track_list['played_at']
 # Getting the data not yet added to the csv file. 
 
 new_data = current_tracks_df[~current_tracks_df['id_played_at'].isin(track_list['id_played_at'])]
-print(new_data)
+print('NEW DATA:\n', new_data)
 
 # Removing the 'id_played_at' column so the data can have the same format as the dataframe in the csv file
 new_data = new_data.drop(columns=['id_played_at'], errors='ignore')
 
-# Adding the new tracks to the csv file
-new_data.to_csv('spotify_tracking.csv', mode='a', index=False, header=not os.path.exists('spotify_tracking.csv'))
+if len(new_data) > 0:
+    # Adding the new tracks to the csv file
+    new_data.to_csv('spotify_tracking.csv', mode='a', index=False, header=not os.path.exists('spotify_tracking.csv'))
