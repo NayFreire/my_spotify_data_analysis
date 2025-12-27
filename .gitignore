@@ -2,4 +2,4 @@
 .cache
 .pyc
 __pycache__/
-.csv
+*.csv
