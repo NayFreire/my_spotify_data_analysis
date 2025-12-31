@@ -31,16 +31,16 @@ def getting_recently_played_tracks():
 
 # getting_recently_played_tracks()
 
-def getting_recently_played_epsodes():
+def getting_recently_played_episodes():
     sp = get_sp_credentials()
 
     results = sp.current_user_recently_played(limit=10)
 
-    # Filtrar apenas episódios de podcast
+    # Filtering tracks by type = 'episode' to get podcast episodes
     for item in results['items']:
         print(item)
         track = item['track']
         if track['type'] == 'episode':
             print(track)
 
-# getting_recently_played_epsodes()
+# getting_recently_played_episodes()
