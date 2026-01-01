@@ -1,8 +1,25 @@
 from spotify_credentials import get_sp_credentials
 
+def getting_genres(artists_id):
+    sp = get_sp_credentials()
+
+    for artist_id in artists_id:
+        genres = []
+        artist = sp.artist(artist_id)
+        if len(artist['genres']) > 0:
+            for genre in artist['genres']:
+                genres.append(genre)       
+
+    return list(set(genres))
+
+def getting_albums(track_id):
+    sp = get_sp_credentials()
+    album = sp.track(track_id)['album']
+
+    return album
+
 def getting_recently_played_tracks():
     sp = get_sp_credentials()
-    
     # Getting the recently played songs
     recent_tracks = sp.current_user_recently_played() # 50 is the max limit
 
@@ -10,6 +27,7 @@ def getting_recently_played_tracks():
 
     for item in recent_tracks['items']:
         track = item['track']
+        # genres = getting_genres([artist['id'] for artist in track['artists']], sp)
         track_info = {
             'id': track['id'],
             'name': track['name'],
@@ -44,3 +62,5 @@ def getting_recently_played_episodes():
             print(track)
 
 # getting_recently_played_episodes()
+
+# getting_genres(['6XyY86QOPPrYVGvF9ch6wz'])
