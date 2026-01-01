@@ -4,6 +4,7 @@ import ast
 import pandas as pd
 
 csv_data = pd.DataFrame(read_csv_file())
+print(csv_data['artist_id'])
 
 def getting_genres_column(df):
     genres_column = []
