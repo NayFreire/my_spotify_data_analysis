@@ -24,7 +24,8 @@ def get_sp_credentials():
     
     # Instantiating the Spotify Manager    
     sp = spotipy.Spotify(
-        auth_manager=spotify_oauth
+        auth_manager=spotify_oauth,
+        retries=0
     )
     
     return sp
