@@ -62,11 +62,11 @@ def getting_artists_genres(artist_ids):
         time.sleep(1)
     return final_artists_list
 
-unique_artist_ids_list = getting_unique_artist_ids(csv_data['artist_id'])
-artist_ids = getting_artist_chunk(unique_artist_ids_list)
+# unique_artist_ids_list = getting_unique_artist_ids(csv_data['artist_id'])
+# artist_ids = getting_artist_chunk(unique_artist_ids_list)
 
-artists_info = getting_artists_genres(artist_ids)
+# artists_info = getting_artists_genres(artist_ids)
 
-print(artists_info)
+# print(artists_info)
 
-pd.DataFrame(artists_info).to_csv('data/artists.csv')
+# pd.DataFrame(artists_info).to_csv('data/artists.csv', index=None)

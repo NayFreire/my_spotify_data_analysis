@@ -69,11 +69,11 @@ def getting_tracks_albums(track_ids):
     return final_tracks_list
 
 
-unique_tracks_id_list = getting_unique_tracks_ids(csv_data['id'])
-track_ids = getting_tracks_chunks(unique_tracks_id_list)
+# unique_tracks_id_list = getting_unique_tracks_ids(csv_data['id'])
+# track_ids = getting_tracks_chunks(unique_tracks_id_list)
 
-tracks_info = getting_tracks_albums(track_ids)
+# tracks_info = getting_tracks_albums(track_ids)
 
-print(tracks_info)
+# print(tracks_info)
 
-pd.DataFrame(tracks_info).to_csv('data/tracks.csv', index=None)
+# pd.DataFrame(tracks_info).to_csv('data/tracks.csv', index=None)
