@@ -46,7 +46,6 @@ if len(new_data) > 0:
             artist_info = pd.DataFrame(artist_info)
             artist_info.to_csv('data/artists.csv', mode='a', index=False, header=not os.path.exists('data/artists.csv')) # adding data to the file
         if not track_already_cataloged:
-            print(track.id, [track.id])
             track_info = getting_tracks_albums([[track.id]]) # getting api data to add. The '[[track_id]]' is there, cause different from artists_id, the track id is just a string and 'getting_tracks_albums(id)' asks for a list. The other [] is for the for loop inside the function
             track_info = pd.DataFrame(track_info)
             track_info.to_csv('data/tracks.csv', mode='a', index=False, header=not os.path.exists('data/tracks.csv')) # adding data to the file

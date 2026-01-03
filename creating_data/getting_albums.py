@@ -68,7 +68,7 @@ def getting_tracks_albums(track_ids):
         time.sleep(1)
     return final_tracks_list
 
-
+#! Uncomment the following lines to re-add all the albums to the csv file 
 # unique_tracks_id_list = getting_unique_tracks_ids(csv_data['id'])
 # track_ids = getting_tracks_chunks(unique_tracks_id_list)
 

@@ -62,6 +62,7 @@ def getting_artists_genres(artist_ids):
         time.sleep(1)
     return final_artists_list
 
+#! Uncomment the following lines to re-add all the genres to the csv file 
 # unique_artist_ids_list = getting_unique_artist_ids(csv_data['artist_id'])
 # artist_ids = getting_artist_chunk(unique_artist_ids_list)
 
