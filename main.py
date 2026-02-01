@@ -1,7 +1,7 @@
 import pandas as pd
 from creating_data.csv_file import read_csv_file
 from datetime import datetime, timedelta
-from analysing_data.streaming import *
+from analyzing_data.streaming import *
 
 df = pd.DataFrame(read_csv_file())
 print(df.info())
@@ -29,3 +29,4 @@ print(df)
 
 initial_analysis(df)
 streamings_per_month(df)
+streaming_per_year(df)
