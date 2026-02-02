@@ -28,6 +28,10 @@ df = df.sort_values(by='played_at')
 print(df)
 
 initial_analysis(df)
-streamings_per_month(df)
-streaming_per_year(df)
-streamings_per_day(df)
+# streamings_per_month(df)
+# streaming_per_year(df)
+# streamings_per_day(df)
+print(f'Minutes streamed: {minutes_streamed_in_general(df)}')
+print(f'Minutes streamed per year: {minutes_streamed_per_year(df)}')
+print(f'Minutes streamed per month: {minutes_streamed_per_month(df)}')
+
