@@ -30,7 +30,7 @@ if len(new_data) > 0:
     # Adding the new tracks to the csv file
     #TODO: Create a function to verify if the new tracks are also available 
 
-    genres = pd.DataFrame(pd.read_csv('data/artists.csv'))
+    genres = pd.DataFrame(pd.read_csv('data/artists_genres.csv'))
     albums = pd.DataFrame(pd.read_csv('data/tracks.csv'))
 
     # Iterating through the new data, to verify if the track and artist on it have already been inserted in their csv files
@@ -44,7 +44,7 @@ if len(new_data) > 0:
         if not artist_already_cataloged:
             artist_info = getting_artists_genres([track.artist_id]) # getting api data to add
             artist_info = pd.DataFrame(artist_info)
-            artist_info.to_csv('data/artists.csv', mode='a', index=False, header=not os.path.exists('data/artists.csv')) # adding data to the file
+            artist_info.to_csv('data/artists_genres.csv', mode='a', index=False, header=not os.path.exists('data/artists_genres.csv')) # adding data to the file
         if not track_already_cataloged:
             track_info = getting_tracks_albums([[track.id]]) # getting api data to add. The '[[track_id]]' is there, cause different from artists_id, the track id is just a string and 'getting_tracks_albums(id)' asks for a list. The other [] is for the for loop inside the function
             track_info = pd.DataFrame(track_info)

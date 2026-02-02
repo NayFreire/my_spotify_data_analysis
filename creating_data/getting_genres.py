@@ -70,4 +70,4 @@ def getting_artists_genres(artist_ids):
 
 # print(artists_info)
 
-# pd.DataFrame(artists_info).to_csv('data/artists.csv', index=None)
+# pd.DataFrame(artists_info).to_csv('data/artists_genres.csv', index=None)
