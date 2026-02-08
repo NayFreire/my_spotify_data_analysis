@@ -52,6 +52,25 @@ def getting_genres_data(df):
     print(number_of_genres)
 
     # Genres listened
-    print(df['unique_genres'].value_counts())
+    genres = df['unique_genres'].value_counts()
+    # print(genres)
+
+    # Grouping rare genres into the 'outros generos' category
+
+    min_count = 40
+
+    mask = genres < min_count
+
+    genres_grouped = (
+        genres
+        .rename(index=lambda genre: "outros generos" if mask.get(genre, False) else genre)
+        .groupby(level=0)
+        .sum()
+    )
+
+    genres_grouped = genres_grouped.sort_values(ascending=False)
+
+    print(genres_grouped)
+
 df_with_genres = adding_genre_column()
 getting_genres_data(df_with_genres)
