@@ -1,5 +1,6 @@
 import pandas as pd
 import ast
+from utils import correcting_played_at_column
 
 def reading_genres_file():
     df = pd.read_csv('data/artists_genres.csv').drop_duplicates().dropna()
@@ -46,7 +47,7 @@ def adding_genre_column():
     # genres_exploded.to_csv('test_genres.csv')
     return genres_exploded
 
-def getting_genres_data(df):
+def getting_genres_numbers(df):
     # Number of genres listened
     number_of_genres = len(df['unique_genres'].value_counts())
     print(number_of_genres)
@@ -72,8 +73,9 @@ def getting_genres_data(df):
 
     print(genres_grouped)
 
-    return genres_grouped
+    return genres, genres_grouped
 
-df_with_genres = adding_genre_column()
-genres = getting_genres_data(df_with_genres)
-top_5_genres = genres[1:6] # 1:6 is used to remove 'other genres' 
+def getting_genres_numbers_per_year(df, year):
+    df = correcting_played_at_column(df)
+    return df, year
+

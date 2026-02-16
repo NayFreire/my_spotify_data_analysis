@@ -1,24 +1,11 @@
 import pandas as pd
 from creating_data.csv_file import read_csv_file
-from datetime import datetime, timedelta
 from analyzing_data.streaming import *
+from analyzing_data.genres import *
+from utils import correcting_played_at_column
 
 df = pd.DataFrame(read_csv_file())
 print(df.info())
-
-def remove_hours(dtime):
-    # Removing the 3 hours added by the Spotify API
-    new_played_at = dtime - timedelta(hours=3)
-    
-    return new_played_at
-
-def correcting_played_at_column(df):
-    # Converting 'played_at' from string to datetime
-    df['played_at'] = pd.to_datetime(df['played_at'], format='ISO8601')
-
-    # Applying the function 'remove_hours' to the column
-    df['played_at'] = df['played_at'].apply(remove_hours)
-    return df
 
 # Fixing the 'played_at' column, 'cause the timestamp showed +3 hours
 df = correcting_played_at_column(df)
@@ -35,3 +22,11 @@ print(f'Minutes streamed: {minutes_streamed_in_general(df)}')
 print(f'Minutes streamed per year: {minutes_streamed_per_year(df)}')
 print(f'Minutes streamed per month: {minutes_streamed_per_month(df)}')
 
+
+df_with_genres = adding_genre_column()
+all_genres, genres_grouped = getting_genres_numbers(df_with_genres)
+
+top_5_genres = genres_grouped[1:6] # 1:6 is used to remove "other genres", because it's in the first position
+
+# TODO: Get genres per year
+top_genres_per_year = getting_genres_numbers_per_year(df_with_genres, 2025)
