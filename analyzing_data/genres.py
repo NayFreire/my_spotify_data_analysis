@@ -41,8 +41,6 @@ def adding_genre_column():
     # Exploding the 'unique_genres' column, so that each row has only one genre
     genres_exploded = tracking_with_genres.explode('unique_genres')
 
-    print(genres_exploded)
-
     # Creating a .csv file with the created df
     # genres_exploded.to_csv('test_genres.csv')
     return genres_exploded
@@ -50,7 +48,7 @@ def adding_genre_column():
 def getting_genres_numbers(df):
     # Number of genres listened
     number_of_genres = len(df['unique_genres'].value_counts())
-    print(number_of_genres)
+    # print(number_of_genres)
 
     # Genres listened
     genres = df['unique_genres'].value_counts()
@@ -71,11 +69,15 @@ def getting_genres_numbers(df):
 
     genres_grouped = genres_grouped.sort_values(ascending=False) # Sorting the counts from biggest value to smallest
 
-    print(genres_grouped)
+    # print(genres_grouped)
 
     return genres, genres_grouped
 
 def getting_genres_numbers_per_year(df, year):
     df = correcting_played_at_column(df)
-    return df, year
+    df_genre_in_year = df[df["played_at"].dt.year == year]
+
+    genres_in_year, genres_in_year_grouped = getting_genres_numbers(df_genre_in_year)
+
+    return genres_in_year_grouped
 
