@@ -57,7 +57,7 @@ def getting_genres_data(df):
 
     # Grouping rare genres into the "other genres" category
 
-    min_count = 40 # Number of minimum rows in the df
+    min_count = 100 # Number of minimum rows in the df
 
     mask = genres < min_count # Mask verifies if the corresponding genres shows up less times than the minimum count
 
@@ -76,3 +76,4 @@ def getting_genres_data(df):
 
 df_with_genres = adding_genre_column()
 genres = getting_genres_data(df_with_genres)
+top_5_genres = genres[1:6] # 1:6 is used to remove 'other genres' 
