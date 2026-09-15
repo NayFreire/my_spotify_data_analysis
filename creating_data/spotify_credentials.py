@@ -18,7 +18,7 @@ def get_sp_credentials():
     spotify_oauth = SpotifyOAuth(
         client_id=client_id,
         client_secret=client_secret,
-        redirect_uri='http://127.0.0.1:3000/callback',
+        redirect_uri='http://127.0.0.1:3000',
         scope='user-read-recently-played'
     )
     
