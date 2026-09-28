@@ -5,10 +5,11 @@ from dotenv import load_dotenv
 import pandas as pd
 import re
 
-def remove_feats(name):
-    pattern = r'\s\(*feat.*\s'
+# Getting only the song name from the song title
+def remove_feats(name): 
+    pattern = r'\s\(*feat.*\s' # pattern for the part of the title where there is a space, maybe a (, the term "feat." and another space
     name = name.lower()
-    return re.split(pattern, name)[0]
+    return re.split(pattern, name)[0] # returns the song name, which come before the features
 
 all_tracks_df = pd.read_csv('data\\tracks.csv') # reading the file of individual tracks and turning it into a df
 tracking_df = pd.read_csv('data\\spotify_tracking.csv') # reading the file for tracking and turning it into a df
