@@ -3,9 +3,12 @@ import os
 import time
 from dotenv import load_dotenv
 import pandas as pd
+import re
 
 def remove_feats(name):
-    return name.split(' (feat.')[0]
+    pattern = r'\s\(*feat.*\s'
+    name = name.lower()
+    return re.split(pattern, name)[0]
 
 all_tracks_df = pd.read_csv('data\\tracks.csv')
 tracking_df = pd.read_csv('data\\spotify_tracking.csv')
@@ -36,7 +39,7 @@ for track in all_tracks_df.itertuples():
     )
     # print(artist._body)
 
-    aaa = artist_name_corrected.lower() != artist.name.lower()
+    # aaa = artist_name_corrected.lower() != artist.name.lower()
 
     if (not artist) or (artist_name_corrected.lower() != artist.name.lower()):
         print(current_track['name'], ' by ', artist_name_corrected,' NOT FOUND')
