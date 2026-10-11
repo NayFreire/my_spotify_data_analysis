@@ -4,3 +4,4 @@
 __pycache__/
 *.csv
 settings.json
+spotify_refresh_token.py

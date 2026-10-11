@@ -45,7 +45,7 @@ def adding_genre_column():
     # genres_exploded.to_csv('test_genres.csv')
     return genres_exploded
 
-def getting_genres_numbers(df):
+def getting_genres_numbers(df, getting_other_genres):
     # Number of genres listened
     number_of_genres = len(df['unique_genres'].value_counts())
     # print(number_of_genres)
@@ -58,8 +58,11 @@ def getting_genres_numbers(df):
 
     min_count = 100 # Number of minimum rows in the df
 
-    mask = genres < min_count # Mask verifies if the corresponding genres shows up less times than the minimum count
-
+    if not getting_other_genres:
+        mask = genres < min_count # Mask verifies if the corresponding genres shows up less times than the minimum count
+    else:
+        mask = genres > min_count # Mask verifies if the corresponding genres shows up less times than the minimum count
+        
     genres_grouped = (
         genres
         .rename(index=lambda genre: "other genres" if mask.get(genre, False) else genre) # Verifying if a genre's count is lower than the minimum count. If true, the genre is renamed "other genres". If false, the genre keep its name
@@ -77,7 +80,7 @@ def getting_genres_numbers_per_year(df, year):
     df = correcting_played_at_column(df)
     df_genre_in_year = df[df["played_at"].dt.year == year]
 
-    genres_in_year, genres_in_year_grouped = getting_genres_numbers(df_genre_in_year)
+    genres_in_year, genres_in_year_grouped = getting_genres_numbers(df_genre_in_year, False)
 
     return genres_in_year_grouped
 

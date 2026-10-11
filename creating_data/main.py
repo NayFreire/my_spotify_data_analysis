@@ -2,6 +2,7 @@ from getting_recently_played_songs import getting_recently_played_tracks
 from csv_file import create_csv_file, read_csv_file
 from getting_genres import getting_artists_genres
 from getting_albums import getting_tracks_albums
+from getting_lyrics import getting_track_lyrics
 import pandas as pd
 import os
 
@@ -18,36 +19,55 @@ track_list = read_csv_file()
 current_tracks_df['id_played_at'] = current_tracks_df['id'] + current_tracks_df['played_at']
 track_list['id_played_at'] = track_list['id'] + track_list['played_at']
 
-# Getting the data not yet added to the csv file. 
-
+# Getting the data not yet added to the csv file.
 new_data = current_tracks_df[~current_tracks_df['id_played_at'].isin(track_list['id_played_at'])]
 print('NEW DATA:\n', new_data)
 
 # Removing the 'id_played_at' column so the data can have the same format as the dataframe in the csv file
 new_data = new_data.drop(columns=['id_played_at'], errors='ignore')
 
-if len(new_data) > 0:
+# Creating an no-duplicates df to use for the track and album insertion. At some cases, when the same track was listened to multiple times, the app made multiple requests for the same one and also added multiple times the same track to the 'tracks' file, that should only contain one of each track. 
+
+no_dups_new_data = new_data.drop_duplicates(subset=['id']).drop(columns=['id_played_at'], errors='ignore')
+
+print('NO DUPS NEW DATA', no_dups_new_data, len(no_dups_new_data))
+
+if len(no_dups_new_data) > 0:
     # Adding the new tracks to the csv file
     #TODO: Create a function to verify if the new tracks are also available 
 
     genres = pd.DataFrame(pd.read_csv('data/artists_genres.csv'))
     albums = pd.DataFrame(pd.read_csv('data/tracks.csv'))
+    lyrics = pd.DataFrame(pd.read_csv('data/lyrics.csv'))
 
     # Iterating through the new data, to verify if the track and artist on it have already been inserted in their csv files
 
-    for track in new_data.itertuples():
+    for track in no_dups_new_data.itertuples():
         # Verifying if the track and artist are already in the files
         artist_already_cataloged = genres['id'].isin(track.artist_id).any()
         track_already_cataloged = albums['track_id'].isin([track.id]).any()
+        lyrics_already_cataloged = lyrics['song_spotify_id'].isin([track.id]).any()
 
         # If they are not, they need to be added
         if not artist_already_cataloged:
             artist_info = getting_artists_genres([track.artist_id]) # getting api data to add
             artist_info = pd.DataFrame(artist_info)
+            print('NEW ARTIST(S): ', artist_info)
+
             artist_info.to_csv('data/artists_genres.csv', mode='a', index=False, header=not os.path.exists('data/artists_genres.csv')) # adding data to the file
         if not track_already_cataloged:
             track_info = getting_tracks_albums([[track.id]]) # getting api data to add. The '[[track_id]]' is there, cause different from artists_id, the track id is just a string and 'getting_tracks_albums(id)' asks for a list. The other [] is for the for loop inside the function
             track_info = pd.DataFrame(track_info)
+            print('NEW TRACK(S): ', track_info)
+
             track_info.to_csv('data/tracks.csv', mode='a', index=False, header=not os.path.exists('data/tracks.csv')) # adding data to the file
+        if not lyrics_already_cataloged:
+            lyrics_info = getting_track_lyrics(track)
+
+            lyrics_info = pd.DataFrame([lyrics_info])
+
+            print('NEW TRACK LYRICS ADDED: ', lyrics_info)
+
+            lyrics_info.to_csv('data/lyrics.csv', mode='a', index=False, header=not os.path.exists('data/lyrics.csv'))
 
     new_data.to_csv('data/spotify_tracking.csv', mode='a', index=False, header=not os.path.exists('data/spotify_tracking.csv'))
