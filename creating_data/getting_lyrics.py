@@ -4,6 +4,8 @@ import time
 from dotenv import load_dotenv
 import pandas as pd
 import re
+import numpy as np
+import requests as req
 
 # Getting only the song name from the song title
 def remove_feats(name): 
@@ -82,3 +84,102 @@ def getting_track_lyrics(track):
 
     time.sleep(5) # wait for 5 seconds to do it for the next song on the df
     return new_song
+
+def adding_instrumental_column():
+    lyrics_df = pd.DataFrame(pd.read_csv('data\\lyrics.csv'))
+    # print(lyrics_df)
+
+    lyrics_df.rename(columns={
+        'song_genius_id': 'source_track_id',
+        'artist_genius_id': 'source_artist_id',
+        'song_genius_url': 'source_track_url'
+    }, inplace=True)
+
+    # print(lyrics_df.columns)
+
+
+    lyrics_df['instrumental'] = lyrics_df['song_lyrics'].isna()
+    lyrics_df['source'] = np.where(
+        lyrics_df['source_track_url'].notna(),
+        'Genius',
+        None
+    )
+    # print(lyrics_df)
+
+    base_url = 'https://lrclib.net'
+
+    no_lyrics_df = lyrics_df[lyrics_df['song_lyrics'].isna()]
+    print(no_lyrics_df)
+
+    lyrics_list = []
+    
+    for track in lyrics_df.itertuples():
+        print(track)
+        if pd.isna(track.song_lyrics):
+            artist = track.artist_name.replace(' ', '+')
+            song = track.song_name.replace(' ', '+')
+
+            track_data = req.get(f'{base_url}/api/get?artist_name={artist}&track_name={song}')
+
+            # print(track_data.status_code, track_data.content,'\n\n')
+            if track_data.status_code == 200:
+                track_data = track_data.json()
+                # print(track_data)
+                track_response = {
+                    'id': track_data['id'],
+                    'instrumental': track_data['instrumental'],
+                    'lyrics': track_data['plainLyrics']
+                }
+
+                print(track_data['name'])
+                new_song = {
+                    'song_spotify_id': track.song_spotify_id, 
+                    'song_name': track.song_name, 
+                    'source_track_id': track_data['id'], 
+                    'source_artist_id': None,
+                    'artist_spotify_id': track.artist_spotify_id,
+                    'artist_name': track.artist_name,
+                    'song_lang': track.song_lang, 
+                    'source_track_url': f'{base_url}/api/get?artist_name={artist}&track_name={song}', 
+                    'song_lyrics': track_data['plainLyrics'],
+                    'instrumental': track_data['instrumental'],
+                    'source': 'lrclib'
+                }
+                lyrics_list.append(new_song)
+            else:
+                track_data = track_data.json()
+                print(track.song_name, 'by', track.artist_name, 'NOT FOUND\n', track_data['message'])
+                new_song = {
+                    'song_spotify_id': track.song_spotify_id, 
+                    'song_name': track.song_name, 
+                    'source_track_id': track.source_track_id, 
+                    'source_artist_id': track.source_artist_id,
+                    'artist_spotify_id': track.artist_spotify_id,
+                    'artist_name': track.artist_name,
+                    'song_lang': track.song_lang, 
+                    'source_track_url': track.source_track_url, 
+                    'song_lyrics': track.song_lyrics,
+                    'instrumental': True,
+                    'source': None
+                }
+        else:
+            new_song = {
+                'song_spotify_id': track.song_spotify_id, 
+                'song_name': track.song_name, 
+                'source_track_id': track.source_track_id, 
+                'source_artist_id': track.source_artist_id,
+                'artist_spotify_id': track.artist_spotify_id,
+                'artist_name': track.artist_name,
+                'song_lang': track.song_lang, 
+                'source_track_url': track.source_track_url, 
+                'song_lyrics': track.song_lyrics,
+                'instrumental': False,
+                'source': 'Genius'
+            }
+        lyrics_list.append(new_song)
+
+    pd.DataFrame(lyrics_list).drop_duplicates().to_csv('data\\source_test.csv', index=False)
+
+    
+
+adding_instrumental_column()
