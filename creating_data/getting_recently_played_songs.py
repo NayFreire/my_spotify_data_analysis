@@ -34,7 +34,7 @@ def getting_recently_played_tracks():
             'artist_name': [artist['name'] for artist in track['artists']],
             'artist_id': [artist['id'] for artist in track['artists']],
             'release_date': track['album']['release_date'],
-            'duration_ms': track['duration_ms'],
+            'duration_ms': int(track['duration_ms']),
             'explicit': track['explicit'],
             'popularity': track['popularity'],
             'played_at': item['played_at']
